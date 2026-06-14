@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Para ti, mi amor ♡</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      min-height: 100vh;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #fff6f0;
+      overflow-x: hidden;
+    }
+
+    /* ── Fondo animado ── */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: radial-gradient(ellipse at 20% 10%, #ffe4f0 0%, transparent 55%),
+                  radial-gradient(ellipse at 80% 80%, #ffecd9 0%, transparent 55%),
+                  radial-gradient(ellipse at 50% 50%, #fff6f0 0%, #fde8f3 100%);
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes bgShift {
+      from { filter: hue-rotate(0deg); }
+      to   { filter: hue-rotate(8deg); }
+    }
+
+    /* ── Estrellas ── */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #f7b7d3;
+      animation: twinkle 3s infinite alternate ease-in-out;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0%   { opacity: 0.08; transform: scale(0.7); }
+      100% { opacity: 0.55; transform: scale(1.3); }
+    }
+
+    /* ── Layout principal ── */
+    .scene {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1rem;
+    }
+
+    /* ── Tarjeta ── */
+    .card {
+      background: rgba(255, 255, 255, 0.93);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 32px;
+      border: 1.5px solid rgba(247, 183, 211, 0.4);
+      box-shadow:
+        0 2px 0 rgba(255,255,255,0.9) inset,
+        0 16px 56px rgba(217, 92, 138, 0.13),
+        0 2px 8px rgba(217, 92, 138, 0.06);
+      max-width: 520px;
+      width: 100%;
+      padding: 2.5rem 2.25rem 2.25rem;
+      text-align: center;
+    }
+
+    /* ── Snoopy ── */
+    .snoopy-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .snoopy-wrap img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 18px rgba(217, 92, 138, 0.25));
+      transition: transform 0.5s cubic-bezier(.34,1.56,.64,1);
+      user-select: none;
+    }
+
+    .snoopy-wrap img:hover {
+      transform: rotate(-6deg) scale(1.1);
+    }
+
+    /* ── Encabezado ── */
+    .eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #d497b8;
+      margin-bottom: 0.35rem;
+    }
+
+    .title {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: #c44d82;
+      line-height: 1.15;
+      margin-bottom: 0.25rem;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 1rem auto;
+      color: #f0aacb;
+      font-size: 0.8rem;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      display: block;
+      width: 48px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #f0aacb, transparent);
+    }
+
+    /* ── Área de versos ── */
+    .verse-area {
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 0.5rem;
+      position: relative;
+    }
+
+    .verse-tag {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #d497b8;
+      margin-bottom: 0.75rem;
+      transition: opacity 0.4s ease;
+    }
+
+    .verse-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.28rem;
+      line-height: 1.95;
+      color: #4a2a42;
+      transition: opacity 0.5s ease, transform 0.5s cubic-bezier(.34,1.2,.64,1);
+    }
+
+    .verse-text.hidden {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .verse-text.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Pantalla de inicio */
+    .intro-hint {
+      font-size: 0.85rem;
+      color: #d4a0bd;
+      margin-top: 0.5rem;
+    }
+
+    .hearts-intro {
+      font-size: 1.4rem;
+      color: #f0b3d0;
+      margin-bottom: 0.5rem;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50%       { transform: scale(1.18); opacity: 1; }
+    }
+
+    /* ── Puntos de progreso ── */
+    .dots {
+      display: flex;
+      gap: 7px;
+      justify-content: center;
+      margin: 1.1rem 0 0;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #f0c8dc;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dot.done    { background: #f0aacb; }
+    .dot.active  { background: #c44d82; transform: scale(1.45); }
+
+    /* ── Controles ── */
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 50px;
+      padding: 0.6rem 1.4rem;
+      transition: all 0.2s ease;
+      border: 1.5px solid #f0aacb;
+      background: transparent;
+      color: #c44d82;
+      letter-spacing: 0.02em;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #fff0f7;
+      border-color: #c44d82;
+      transform: scale(1.03);
+    }
+
+    .btn:disabled {
+      opacity: 0.28;
+      cursor: default;
+      transform: none;
+    }
+
+    .btn-main {
+      background: linear-gradient(135deg, #e96fa0, #d94f87);
+      border-color: transparent;
+      color: #fff;
+      padding: 0.7rem 2rem;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 18px rgba(217, 79, 135, 0.3);
+    }
+
+    .btn-main:hover:not(:disabled) {
+      background: linear-gradient(135deg, #d94f87, #c4406f);
+      transform: scale(1.04);
+      box-shadow: 0 6px 22px rgba(196, 64, 111, 0.35);
+    }
+
+    /* ── Pantalla final ── */
+    .final-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .final-screen.show {
+      display: flex;
+    }
+
+    .final-screen img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      animation: snoopyBounce 0.9s ease-in-out infinite alternate;
+    }
+
+    @keyframes snoopyBounce {
+      from { transform: translateY(0) rotate(-3deg); }
+      to   { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    .final-msg {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #c44d82;
+      line-height: 1.55;
+    }
+
+    .btn-restart {
+      background: none;
+      border: none;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.78rem;
+      color: #d4a0bd;
+      cursor: pointer;
+      margin-top: 0.4rem;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .btn-restart:hover { color: #c44d82; }
+
+    /* ── Corazones flotantes ── */
+    .heart-particle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      font-size: 1rem;
+      animation: floatUp 1.6s ease-out forwards;
+    }
+
+    @keyframes floatUp {
+      0%   { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translateY(-90px) scale(0.4) rotate(20deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .card {
+        padding: 2rem 1.5rem 1.75rem;
+        border-radius: 24px;
+      }
+      .title { font-size: 1.75rem; }
+      .verse-text { font-size: 1.1rem; }
+      .snoopy-wrap img { width: 96px; height: 96px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg" aria-hidden="true"></div>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+
+  <main class="scene">
+    <div class="card" role="main" aria-label="Poema interactivo">
+
+      <!-- Snoopy -->
+      <div class="snoopy-wrap" id="snoopy-wrap">
+        <img
+          id="snoopy-img"
+          src="https://embroideres.com/files/cache/460f911885ad833e0c2fffd989c34c96_f1057517.jpg"
+          alt="Snoopy"
+          onerror="this.onerror=null;this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Snoopy_Baseball.png/200px-Snoopy_Baseball.png';"
+        />
+      </div>
+
+      <!-- Encabezado -->
+      <p class="eyebrow">con todo mi amor</p>
+      <h1 class="title">Para ti, mi amor</h1>
+
+      <div class="divider" aria-hidden="true">♡</div>
+
+      <!-- Área de versos -->
+      <div class="verse-area" id="verse-area" aria-live="polite" aria-atomic="true">
+
+        <!-- Vista inicial -->
+        <div id="intro-view">
+          <div class="hearts-intro">♡ ♡ ♡</div>
+          <p class="intro-hint">Toca el botón para comenzar</p>
+        </div>
+
+        <!-- Estrofa actual -->
+        <div id="poem-view" style="display:none;">
+          <p class="verse-tag" id="verse-tag">Estrofa I</p>
+          <p class="verse-text hidden" id="verse-text"></p>
+        </div>
+
+        <!-- Pantalla final -->
+        <div class="final-screen" id="final-view">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/en/5/53/Snoopy_Peanuts_animated_series.png"
+            alt="Snoopy feliz"
+            onerror="this.onerror=null;this.src='https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExYjd2bDhpZnd0b3F6eGh6c3U0cXZ0azB4dHJ0ZGg3M2p5ZTVrejJ3eSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dcjXtLmMMw5gc/giphy.gif';"
+          />
+          <p class="final-msg">Te amo muchísimo,<br>hoy &amp; siempre ♡</p>
+          <button class="btn-restart" onclick="restart()" aria-label="Leer el poema de nuevo">↺ Leer de nuevo</button>
+        </div>
+      </div>
+
+      <!-- Puntos de progreso -->
+      <div class="dots" id="dots" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"></div>
+
+      <!-- Controles -->
+      <div class="controls" id="controls">
+        <button class="btn" id="btn-prev" onclick="prev()" disabled aria-label="Verso anterior">← Anterior</button>
+        <button class="btn btn-main" id="btn-next" onclick="next()" aria-label="Comenzar el poema">Comenzar ♡</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    /* ── Contenido del poema ── */
+    const stanzas = [
+      { tag: "Estrofa I  ·  versos 1 & 2",  lines: ["Esto no es una relación más del montón,", "esto no es cualquier cosa, esto es amor."] },
+      { tag: "Estrofa I  ·  versos 3 & 4",  lines: ["Es algo que sentimos & hemos demostrado,", "tanto a nosotros mismos como a los que están a los lados."] },
+      { tag: "Estrofa II  ·  versos 1 & 2", lines: ["Yo no miento cuando digo que contigo lo quiero todo,", "que contigo quiero casarme & formar mi familia."] },
+      { tag: "Estrofa II  ·  versos 3 & 4", lines: ["Tú sabes, mi bebé, que te amo a ti solo,", "& que solo contigo quiero compartir mi vida."] },
+      { tag: "Estrofa III  ·  versos 1 & 2",lines: ["Sueño con aquel día en el que deje de pensar,", "en que solo me enfoque en aquella felicidad."] },
+      { tag: "Estrofa III  ·  versos 3 & 4",lines: ["Que me provoque estar contigo & poderte besar,", "que sepas que las promesas las cumpliré sin más."] },
+      { tag: "Estrofa IV  ·  versos 1 & 2", lines: ["Quiero cruzar miradas & tomarnos de las manos,", "que seamos como niños en todo lugar jugando."] },
+      { tag: "Estrofa IV  ·  versos 3 & 4", lines: ["& que las personas nos miren con ternura,", "pensando \"esos chicos se aman con locura\"."] }
+    ];
+
+    let current = -1;
+    const TOTAL = stanzas.length;
+
+    const introView  = document.getElementById('intro-view');
+    const poemView   = document.getElementById('poem-view');
+    const finalView  = document.getElementById('final-view');
+    const verseTag   = document.getElementById('verse-tag');
+    const verseText  = document.getElementById('verse-text');
+    const btnNext    = document.getElementById('btn-next');
+    const btnPrev    = document.getElementById('btn-prev');
+    const dotsEl     = document.getElementById('dots');
+    const controls   = document.getElementById('controls');
+
+    /* ── Puntos ── */
+    function buildDots() {
+      dotsEl.innerHTML = '';
+      stanzas.forEach((_, i) => {
+        const d = document.createElement('div');
+        d.className = 'dot' + (i < current ? ' done' : '') + (i === current ? ' active' : '');
+        dotsEl.appendChild(d);
+      });
+      dotsEl.setAttribute('aria-valuenow', Math.max(0, current + 1));
+    }
+
+    /* ── Mostrar estrofa ── */
+    function showStanza(idx) {
+      verseText.classList.remove('visible');
+      verseText.classList.add('hidden');
+
+      setTimeout(() => {
+        verseTag.textContent = stanzas[idx].tag;
+        verseText.innerHTML  = stanzas[idx].lines.join('<br>');
+        verseText.classList.remove('hidden');
+        verseText.classList.add('visible');
+      }, 320);
+    }
+
+    /* ── Siguiente ── */
+    function next() {
+      if (current < TOTAL - 1) {
+        current++;
+
+        if (current === 0) {
+          introView.style.display = 'none';
+          poemView.style.display  = 'block';
+          btnNext.textContent = 'Siguiente →';
+        }
+
+        showStanza(current);
+        buildDots();
+
+        btnPrev.disabled = false;
+        btnNext.textContent = current === TOTAL - 1 ? 'Finalizar ♡' : 'Siguiente →';
+        spawnHearts(3);
+
+      } else {
+        showFinal();
+      }
+    }
+
+    /* ── Anterior ── */
+    function prev() {
+      if (current > 0) {
+        current--;
+        showStanza(current);
+        buildDots();
+        btnPrev.disabled    = current === 0;
+        btnNext.textContent = 'Siguiente →';
+      }
+    }
+
+    /* ── Final ── */
+    function showFinal() {
+      poemView.style.display  = 'none';
+      finalView.classList.add('show');
+      controls.style.display  = 'none';
+      dotsEl.style.display    = 'none';
+      for (let i = 0; i < 16; i++) {
+        setTimeout(() => spawnHearts(2), i * 120);
+      }
+    }
+
+    /* ── Reiniciar ── */
+    function restart() {
+      current = -1;
+      introView.style.display = '';
+      poemView.style.display  = 'none';
+      finalView.classList.remove('show');
+      controls.style.display  = '';
+      dotsEl.style.display    = '';
+      btnNext.textContent  = 'Comenzar ♡';
+      btnPrev.disabled     = true;
+      buildDots();
+    }
+
+    /* ── Corazones flotantes ── */
+    const heartColors = ['#d94f87','#f0aacb','#e96fa0','#f7c8de','#c44d82'];
+    const heartSyms   = ['♡','♡','♡','✿','♡','✦'];
+
+    function spawnHearts(n) {
+      for (let i = 0; i < n; i++) {
+        const h = document.createElement('div');
+        h.className = 'heart-particle';
+        h.textContent = heartSyms[Math.floor(Math.random() * heartSyms.length)];
+        h.style.cssText = [
+          'left:'  + (15 + Math.random() * 70) + 'vw',
+          'top:'   + (25 + Math.random() * 50) + 'vh',
+          'color:' + heartColors[Math.floor(Math.random() * heartColors.length)],
+          'font-size:' + (0.8 + Math.random() * 0.8) + 'rem',
+          'animation-delay:' + (Math.random() * 0.3) + 's'
+        ].join(';');
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 2000);
+      }
+    }
+
+    /* ── Estrellas de fondo ── */
+    (function buildStars() {
+      const container = document.getElementById('stars');
+      for (let i = 0; i < 36; i++) {
+        const s  = document.createElement('div');
+        const sz = 2 + Math.random() * 5;
+        s.className = 'star';
+        s.style.cssText = [
+          'width:'             + sz + 'px',
+          'height:'            + sz + 'px',
+          'left:'              + Math.random() * 100 + '%',
+          'top:'               + Math.random() * 100 + '%',
+          'animation-delay:'   + (Math.random() * 3)     + 's',
+          'animation-duration:'+ (2 + Math.random() * 3) + 's'
+        ].join(';');
+        container.appendChild(s);
+      }
+    })();
+
+    /* ── Init ── */
+    buildDots();
+  </script>
+</body>
+</html>
